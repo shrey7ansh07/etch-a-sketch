@@ -32,41 +32,58 @@ button.addEventListener('mouseup', function(e) {
   const container = document.createElement('div');
   container.classList.add('grid-container');
   body.appendChild(container);
-function enterno() {
-
+  function colorit(e) {
+    const computedStyle = window.getComputedStyle(e.target);
+    const backgroundColor = computedStyle.backgroundColor;
+  
+    if (backgroundColor === 'rgba(0, 0, 0, 0)' || backgroundColor === 'transparent') {
+      let x = Math.random() * 255;
+      let y = Math.random() * 255;
+      let z = Math.random() * 255;
+      e.target.style.backgroundColor = `rgb(${x}, ${y}, ${z})`;
+    } else {
+      const rgbValues = backgroundColor.match(/\d+/g); // Matches all numbers in the string
+  
+      // Modify the RGB values
+      const modifiedRGBValues = rgbValues.map(element => {
+        const newValue = element * 1.1;
+        return newValue > 255 ? 255 : Math.round(newValue);
+      });
+  
+      e.target.style.backgroundColor = `rgb(${modifiedRGBValues[0]}, ${modifiedRGBValues[1]}, ${modifiedRGBValues[2]})`;
+    }
+  }
+  
+  
+  function enterno() {
     container.innerHTML = '';
-
-
-
-
-    let value = window.prompt('Enter the no grids you want < 70');
-    if(!value || value>70)
-    { enterno();
-        return;
+  
+    let value = window.prompt('Enter the number of grids you want (up to 100)');
+    if (!value || isNaN(value) || value > 100) {
+      enterno(); // Prompt again until a valid value is entered
+      return;
     }
     value = +value;
     let width = getComputedStyle(container).width;
-    width = +width.substring(0,width.length-2);
-    let pixel = Math.round(width/value);
-
-    for(let j = 0;j<value;j++)
-    {
-        let r = document.createElement('div');
-        console.log('hi');
-        r.classList.add('rows','row'+j);
-        for (let i = 0;i<value;i++)
-        {
-            let elem = document.createElement('div');
-            elem.classList.add('row');
-            elem.style.width = pixel + 'px';
-            elem.style.height = pixel + 'px';
-
-            r.appendChild(elem);
-        }
-        container.appendChild(r);
+    width = +width.substring(0, width.length - 2);
+    let pixel = Math.round(width / value);
+  
+    for (let j = 0; j < value; j++) {
+      let r = document.createElement('div');
+      r.classList.add('rows', 'row' + j);
+      for (let i = 0; i < value; i++) {
+        let elem = document.createElement('div');
+        elem.classList.add('row');
+        elem.style.width = pixel + 'px';
+        elem.style.height = pixel + 'px';
+        elem.addEventListener('mouseenter', colorit);
+  
+        r.appendChild(elem);
+      }
+      container.appendChild(r);
     }
-
-}
+  }
+  
   
 
 
